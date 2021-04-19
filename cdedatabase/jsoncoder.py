@@ -14,7 +14,7 @@ import re
 import os
 import shutil
 import ijson
-import json
+import simplejson as json
 import six
 from tempfile import mkstemp
 
