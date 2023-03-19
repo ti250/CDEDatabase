@@ -153,6 +153,7 @@ class JSONCoder(PlainTextCoder):
             # Therefore, the longer the file, the slower the delete function.
             file_handle, abs_path = mkstemp()
             filename = self._get_file_name(record_type, folder)
+            num_records_written = 0
             with open(filename) as old_file:
                 with open(file_handle, 'w', newline='\n') as new_file:
                     previous_line = None
@@ -162,6 +163,8 @@ class JSONCoder(PlainTextCoder):
                             if previous_line:
                                 print(previous_line)
                                 new_file.write(previous_line + '\n')
+                            if not num_records_written and line[0] != "{":
+                                new_file.write("\n")
                             new_file.write(line)
                         else:
                             if line[-2] == ',':
@@ -173,6 +176,7 @@ class JSONCoder(PlainTextCoder):
                             for k in dictionary_form.keys():
                                 key = k
                             if key not in ids:
+                                num_records_written += 1
                                 if previous_line:
                                     new_file.write(previous_line + ',\n')
                                 previous_line = adjusted_line[1:-1]
